@@ -17,6 +17,7 @@ class ViewController: UIViewController {
     var countries = [String]()
     var score = 0
     var correctAnswer = 0
+    var count = 0 //to track of how many questions have been asked
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,12 +42,14 @@ class ViewController: UIViewController {
         countries.shuffle()
         //This gives us a new integer property that will store whether it's flag 0, 1 or 2 that holds the correct answer
         correctAnswer = Int.random(in: 0...2)
+        count += 1
+        
         
         button1.setImage(UIImage(named: countries[0]), for: .normal)
         button2.setImage(UIImage(named: countries[1]), for: .normal)
         button3.setImage(UIImage(named: countries[2]), for: .normal)
         
-        title = countries[correctAnswer].uppercased()
+        title = countries[correctAnswer].uppercased() + " Score: \(score)"
     }
     
     
@@ -58,13 +61,20 @@ class ViewController: UIViewController {
             title = "Correct"
             score += 1
         } else {
-            title = "Wrong"
+            title = "Wrong! That’s the flag of \(countries[sender.tag]) "
             score -= 1
         }
         
-        let ac = UIAlertController(title: title, message: "Your score is \(score).", preferredStyle: .alert)
-        ac.addAction(UIAlertAction(title: "Continue", style: .default, handler: askQuestion))
-        present(ac, animated: true)
+        if count == 10 {
+            let ac = UIAlertController(title: "The End", message: "Your score is \(score).", preferredStyle: .alert)
+            ac.addAction(UIAlertAction(title: "OK", style: .default, handler: askQuestion))
+            present(ac, animated: true)
+            
+        } else {
+            let ac = UIAlertController(title: title, message: "Your score is \(score).", preferredStyle: .alert)
+            ac.addAction(UIAlertAction(title: "Continue", style: .default, handler: askQuestion))
+            present(ac, animated: true)
+        }
         
     }
     
